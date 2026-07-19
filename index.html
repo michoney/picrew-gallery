@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Picrew Gallery</title>
+<title>Picrew 画廊</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#1a1a2e;color:#eee;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
+body{background:#1a1a2e;color:#eee;font-family:-apple-system,BlinkMacSystemFont,"Microsoft YaHei","PingFang SC",sans-serif;min-height:100vh}
 header{background:#16213e;padding:16px 24px;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.3)}
 header h1{font-size:20px;margin-bottom:10px}
 header input{width:100%;max-width:400px;padding:8px 14px;border:none;border-radius:20px;background:#0f3460;color:#eee;font-size:14px;outline:none}
@@ -36,8 +36,8 @@ header input:focus{box-shadow:0 0 0 2px #e94560}
 </head>
 <body>
 <header>
-<h1>Picrew Gallery</h1>
-<input type="text" id="search" placeholder="Search makers..." oninput="filter()">
+<h1>🎨 Picrew 画廊</h1>
+<input type="text" id="search" placeholder="搜索模板名称或作者..." oninput="filter()">
 <div class="stats" id="stats"></div>
 </header>
 <div class="grid" id="grid"></div>
@@ -47,11 +47,11 @@ header input:focus{box-shadow:0 0 0 2px #e94560}
 
 <script src="data.js"></script>
 <script>
-const grid=document.getElementById('grid');
-const search=document.getElementById('search');
-const stats=document.getElementById('stats');
-const modal=document.getElementById('modal');
-const modalContent=document.getElementById('modalContent');
+const grid=document.getElementById("grid");
+const search=document.getElementById("search");
+const stats=document.getElementById("stats");
+const modal=document.getElementById("modal");
+const modalContent=document.getElementById("modalContent");
 
 let filtered=[...GALLERY];
 
@@ -61,15 +61,15 @@ function render(){
       <img class="icon" src="${m.icon}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%230f3460%22 width=%22100%22 height=%22100%22/></svg>'">
       <div class="info">
         <div class="title">${esc(m.title)}</div>
-        <div class="creator">${esc(m.creator)}</div>
-        <div class="count">${m.total.toLocaleString()} parts</div>
+        <div class="creator">👤 ${esc(m.creator)}</div>
+        <div class="count">📦 ${m.total.toLocaleString()} 个部件</div>
       </div>
     </div>
-  `).join('');
-  stats.textContent=`${filtered.length} makers | ${GALLERY.reduce((s,m)=>s+m.total,0).toLocaleString()} total parts`;
+  `).join("");
+  stats.textContent="共 "+GALLERY.length+" 个模板 | "+GALLERY.reduce((s,m)=>s+m.total,0).toLocaleString()+" 个部件";
 }
 
-function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 
 function filter(){
   const q=search.value.toLowerCase();
@@ -81,23 +81,24 @@ function openMaker(id){
   const m=GALLERY.find(x=>x.id===id);
   if(!m)return;
   const previews=m.previews.slice(0,24).map(p=>{
-    const url=`https://cdn.picrew.me/app/image_maker/${m.id}/${p.split('_')[1]}/${p}`;
-    return `<img src="${url}" loading="lazy" onerror="this.style.display='none'">`;
-  }).join('') || '<p style="color:#888">No previews available</p>';
+    const pid=p.split("_")[1]||"";
+    const url="https://cdn.picrew.me/app/image_maker/"+m.id+"/"+pid+"/"+p;
+    return "<img src=\""+url+"\" loading=\"lazy\" onerror=\"this.style.display='none'\">";
+  }).join("") || "<p style=\"color:#888\">暂无预览</p>";
   
   modalContent.innerHTML=`
     <h2>${esc(m.title)}</h2>
-    <p class="by">by ${esc(m.creator)} &middot; ${m.total.toLocaleString()} parts</p>
+    <p class="by">作者：${esc(m.creator)} &middot; ${m.total.toLocaleString()} 个部件</p>
     <div class="preview-grid">${previews}</div>
     <div class="actions">
-      <a href="${m.url}" target="_blank" class="btn btn-open">Open in Picrew</a>
-      <button class="btn btn-close" onclick="closeModal()">Close</button>
+      <a href="${m.url}" target="_blank" class="btn btn-open">🔗 去 Picrew 捏脸</a>
+      <button class="btn btn-close" onclick="closeModal()">关闭</button>
     </div>
   `;
-  modal.classList.add('active');
+  modal.classList.add("active");
 }
 
-function closeModal(){modal.classList.remove('active')}
+function closeModal(){modal.classList.remove("active")}
 
 render();
 </script>
